@@ -9,6 +9,7 @@ import argparse
 import config
 import mail
 
+URL = config.URL
 
 def parse_args(args=sys.argv[1:]):
     parser = argparse.ArgumentParser()
@@ -18,7 +19,7 @@ def parse_args(args=sys.argv[1:]):
 
 
 def get_update_date():
-    r = requests.get(url)
+    r = requests.get(URL)
     soup = BeautifulSoup(r.content, "html.parser")
     results = soup.find_all("div", class_="aalto-user-generated-content")
     
@@ -27,7 +28,6 @@ def get_update_date():
     
 
 def main(args):
-    url = config.URL
     mails = config.MAILS
     subject = 'AYY OPEN CALL'
 
