@@ -33,24 +33,24 @@ def main(args):
 
     last_update = get_update_date()
     while True:
-    try:
-        time.sleep(args.update_rate)
-        updated_date = get_update_date()
-        if updated_date == last_update:
-            print('{}, No new announcement. AYY\'s Last update: {}'.format(datetime.datetime.now().strftime("%X, %x"), last_update))
-        else:
-            content = 'Website was updated recently. There might be new house options.'
-            print('{}'.format(datetime.datetime.now().strftime("%X, %x")), content)
+        try:
+            time.sleep(args.update_rate)
+            updated_date = get_update_date()
+            if updated_date == last_update:
+                print('{}, No new announcement. AYY\'s Last update: {}'.format(datetime.datetime.now().strftime("%X, %x"), last_update))
+            else:
+                content = 'Website was updated recently. There might be new house options.'
+                print('{}'.format(datetime.datetime.now().strftime("%X, %x")), content)
+                mail.send(mails, subject, content)
+                print('Mailing list has been alerted.')
+                last_update = get_update_date()
+
+        except Exception as e:
+            content = 'There was an exception! \n {}. The script has been terminated.'.format(e)
+            print('!--- {}'.format(datetime.datetime.now().strftime("%X, %x")), content, '---!')
             mail.send(mails, subject, content)
             print('Mailing list has been alerted.')
-            last_update = get_update_date()
-
-    except Exception as e:
-        content = 'There was an exception! \n {}. The script has been terminated.'.format(e)
-        print('!--- {}'.format(datetime.datetime.now().strftime("%X, %x")), content, '---!')
-        mail.send(mails, subject, content)
-        print('Mailing list has been alerted.')
-        break
+            break
         
 if __name__ == "__main__":
     args = parse_args()
