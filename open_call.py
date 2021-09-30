@@ -7,11 +7,13 @@ import requests
 import config
 import mail
 
-url = config.URL
-mails = config.MAILS
-subject = 'AYY OPEN CALL'
 
-mail = mail.Mail()
+def parse_args(args=sys.argv[1:]):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--update-rate", "-t", type=int, default=3600,
+                        help="Update rate in seconds")
+    return parser.parse_args(args)
+
 
 def get_update_date():
     r = requests.get(url)
@@ -21,11 +23,18 @@ def get_update_date():
     date = results[2].find('p').find('strong').text.strip()[:-1]
     return date.replace('.', '/')
     
-last_update = get_update_date()
 
-while True:
+def main(args):
+    url = config.URL
+    mails = config.MAILS
+    subject = 'AYY OPEN CALL'
+
+    mail = mail.Mail()
+
+    last_update = get_update_date()
+    while True:
     try:
-        time.sleep(60)
+        time.sleep(args.update_rate)
         updated_date = get_update_date()
         if updated_date == last_update:
             print('{}, No new announcement. AYY\'s Last update: {}'.format(datetime.datetime.now().strftime("%X, %x"), last_update))
@@ -42,3 +51,8 @@ while True:
         mail.send(mails, subject, content)
         print('Mailing list has been alerted.')
         break
+        
+if __name__ == "__main__":
+    args = parse_args()
+    main(args)
+        
