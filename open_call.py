@@ -7,7 +7,7 @@ import sys
 import argparse
 
 import config
-import mail
+import email
 
 
 def parse_args(args=sys.argv[1:]):
