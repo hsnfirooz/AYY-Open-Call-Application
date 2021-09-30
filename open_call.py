@@ -31,7 +31,7 @@ def main(args):
     mails = config.MAILS
     subject = 'AYY OPEN CALL'
 
-    mail = mail.Mail()
+    mail = email.Mail()
 
     last_update = get_update_date()
     while True:
