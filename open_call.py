@@ -3,6 +3,7 @@ from urllib.request import urlopen
 import datetime
 from bs4 import BeautifulSoup
 import requests
+import sys
 
 import config
 import mail
