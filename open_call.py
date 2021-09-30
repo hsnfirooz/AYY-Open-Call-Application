@@ -7,7 +7,7 @@ import requests
 import config
 import mail
 
-ayy_url = config.URL
+url = config.URL
 mails = config.MAILS
 subject = 'AYY OPEN CALL'
 
