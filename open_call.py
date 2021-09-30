@@ -1,58 +1,44 @@
-import requests
 import time
-import config
-import smtplib
-import hashlib
 from urllib.request import urlopen
-import ssl
+import datetime
+from bs4 import BeautifulSoup
+import requests
 
-url = config.URL
-response = urlopen(url).read()
-currentHash = hashlib.sha224(response).hexdigest()
+import config
+import mail
 
-
-class Mail:
-    def __init__(self):
-        self.port = 465
-        self.smtp_server_domain_name = "smtp.gmail.com"
-        self.sender_mail = config.USERNAME
-        self.password = config.PASSOWRD
-
-    def send(self, emails, subject, content):
-        ssl_context = ssl.create_default_context()
-        service = smtplib.SMTP_SSL(self.smtp_server_domain_name, self.port, context=ssl_context)
-        service.login(self.sender_mail, self.password)
-        
-        for email in emails:
-            result = service.sendmail(self.sender_mail, email, f"Subject: {subject}\n{content}")
-
-        service.quit()
-
+ayy_url = config.URL
 mails = config.MAILS
 subject = 'AYY OPEN CALL'
-content = 'Something changed'
 
-mail = Mail()
+mail = mail.Mail()
 
-response = urlopen(url).read()
-currentHash = hashlib.sha224(response).hexdigest()
+def get_update_date():
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content, "html.parser")
+    results = soup.find_all("div", class_="aalto-user-generated-content")
+    
+    date = results[2].find('p').find('strong').text.strip()[:-1]
+    return date.replace('.', '/')
+    
+last_update = get_update_date()
+
 while True:
-
     try:
-        time.sleep(1800)
-        response = urlopen(url).read()
-        newHash = hashlib.sha224(response).hexdigest()
-
-        if newHash == currentHash:
-            continue
-
+        time.sleep(60)
+        updated_date = get_update_date()
+        if updated_date == last_update:
+            print('{}, No new announcement. AYY\'s Last update: {}'.format(datetime.datetime.now().strftime("%X, %x"), last_update))
         else:
-            print('something changed!')
+            content = 'Website was updated recently. There might be new house options.'
+            print('{}'.format(datetime.datetime.now().strftime("%X, %x")), content)
             mail.send(mails, subject, content)
-            response = urlopen(url).read()
-            currentHash = hashlib.sha224(response).hexdigest()
-            continue
+            print('Mailing list has been alerted.')
+            last_update = get_update_date()
 
     except Exception as e:
-
-        print(e)
+        content = 'There was an exception! \n {}. The script has been terminated.'.format(e)
+        print('!--- {}'.format(datetime.datetime.now().strftime("%X, %x")), content, '---!')
+        mail.send(mails, subject, content)
+        print('Mailing list has been alerted.')
+        break
