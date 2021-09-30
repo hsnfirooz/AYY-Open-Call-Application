@@ -7,7 +7,7 @@ import sys
 import argparse
 
 import config
-import email
+import mail
 
 
 def parse_args(args=sys.argv[1:]):
@@ -31,7 +31,7 @@ def main(args):
     mails = config.MAILS
     subject = 'AYY OPEN CALL'
 
-    mail = email.Mail()
+    email = mail.Mail()
 
     last_update = get_update_date()
     while True:
@@ -43,14 +43,14 @@ def main(args):
             else:
                 content = 'Website was updated recently. There might be new house options.'
                 print('{}'.format(datetime.datetime.now().strftime("%X, %x")), content)
-                mail.send(mails, subject, content)
+                email.send(mails, subject, content)
                 print('Mailing list has been alerted.')
                 last_update = get_update_date()
 
         except Exception as e:
             content = 'There was an exception! \n {}. The script has been terminated.'.format(e)
             print('!--- {}'.format(datetime.datetime.now().strftime("%X, %x")), content, '---!')
-            mail.send(mails, subject, content)
+            email.send(mails, subject, content)
             print('Mailing list has been alerted.')
             break
         
