@@ -36,7 +36,7 @@ def main(args):
     last_update = get_update_date()
     
     print('=== Monitoring Started ===')
-    print('Last Update: {}, Check Every: {}, Email Notification: {}'.format(last_update, args.update_rate, email)
+    print('Last Update: {}, Check Every: {}, Email Notification: {}'.format(last_update, args.update_rate, email))
     
     while True:
         try:
