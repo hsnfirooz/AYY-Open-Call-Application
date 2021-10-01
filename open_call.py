@@ -34,6 +34,10 @@ def main(args):
     email = mail.Mail()
 
     last_update = get_update_date()
+    
+    print('=== Monitoring Started ===')
+    print('Last Update: {}, Check Every: {}, Email Notification: {}'.format(last_update, args.update_rate, email)
+    
     while True:
         try:
             time.sleep(args.update_rate)
