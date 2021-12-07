@@ -23,7 +23,8 @@ def get_update_date():
     soup = BeautifulSoup(r.content, "html.parser")
     results = soup.find_all("div", class_="aalto-user-generated-content")
     
-    date = results[2].find('p').find('strong').text.strip()[:-1]
+    #date = results[2].find('p').find('strong').text.strip()[:-1]
+    date = results[2].find('p').text.strip()
     return date.replace('.', '/')
     
 
